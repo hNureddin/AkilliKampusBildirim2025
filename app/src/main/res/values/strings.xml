@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">AkilliKampusBildirim01</string>
+    <string name="greattingMessage">Welcome!</string>
+    <string name="login">Login</string>
+    <string name="usernameHint">Input User name</string>
+    <string name="login_error">Username or Password is incorrect</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label" translatable="false">First Fragment</string>
+    <string name="second_fragment_label" translatable="false">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor ....
+    </string>
+    <!-- Strings of Fragments -->
+    <string name="hello_report_list_fragment">Report List Screen</string>
+    <string name="hello_profile_fragment">Profile Screen</string>
+    <string name="hello_map_fragment">Map Screen</string>
+    <!-- Strings of main activity buttons -->
+    <string name="report_list_button">Report List</string>
+    <string name="profile_button">Profile</string>
+    <string name="map_button">Map</string>
+    <!-- Strings of report list cards -->
+
+
+</resources>

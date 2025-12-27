@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AkilliKampusBildirim01</string>
+    <string name="greattingMessage">Hoşgeldiniz!</string>
+    <string name="login">giriş</string>
+    <string name="usernameHint">Kullancı adınızı giriniz!</string>
+    <string name="login_error">kullancı adı ya da şifreniz yanlış!</string>
+</resources>
