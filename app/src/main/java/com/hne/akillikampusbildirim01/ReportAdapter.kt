@@ -3,11 +3,13 @@ package com.hne.akillikampusbildirim01
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ReportAdapter(
-    private val items: List<Report>
+    private val items: List<Report>,
+    private val isAdmin: Boolean
 ) : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
     class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -15,9 +17,11 @@ class ReportAdapter(
         val description: TextView = itemView.findViewById(R.id.txtVwDescription)
         val status: TextView = itemView.findViewById(R.id.txtVwStatus)
         val time: TextView = itemView.findViewById(R.id.txtVwTime)
+        val btnChangeStatus: Button = itemView.findViewById(R.id.btnChangeStatus)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
+
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_report, parent, false)
         return ReportViewHolder(view)
@@ -25,11 +29,31 @@ class ReportAdapter(
 
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
         val report = items[position]
+
         holder.title.text = report.title
         holder.description.text = report.description
         holder.status.text = report.status
         holder.time.text = report.time
+
+        if (isAdmin) {
+            holder.btnChangeStatus.visibility = View.VISIBLE
+            holder.btnChangeStatus.setOnClickListener {
+                report.status = nextStatus(report.status)
+                notifyItemChanged(position)
+            }
+        } else {
+            holder.btnChangeStatus.visibility = View.GONE
+            holder.btnChangeStatus.setOnClickListener(null)
+        }
     }
 
     override fun getItemCount(): Int = items.size
+
+    private fun nextStatus(current: String): String {
+        return when (current) {
+            "Status: Open" -> "Status: progress"
+            "Status: progress" -> "Status: Solved"
+            else -> "Status: Open"
+        }
+    }
 }

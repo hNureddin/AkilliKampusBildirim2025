@@ -28,4 +28,6 @@
     <string name="etDescription">Report Description</string>
     <string name="sendBtnTxt">Send</string>
     <string name="newReportBtnTxt">Create New Report</string>
+    <string name="btnChangeStatusTxt">Change Status</string>
+
 </resources>
