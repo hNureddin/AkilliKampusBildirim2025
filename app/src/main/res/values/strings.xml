@@ -21,7 +21,11 @@
     <string name="report_list_button">Report List</string>
     <string name="profile_button">Profile</string>
     <string name="map_button">Map</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- Strings of report list cards -->
-
-
+    <string name="etTitle">Report Title</string>
+    <string name="etDescription">Report Description</string>
+    <string name="sendBtnTxt">Send</string>
+    <string name="newReportBtnTxt">Create New Report</string>
 </resources>

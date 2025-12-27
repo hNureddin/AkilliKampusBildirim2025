@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.Button
+import android.widget.EditText
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -15,15 +15,13 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ReportListFragment.newInstance] factory method to
+ * Use the [CreateReportFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ReportListFragment : Fragment() {
+class CreateReportFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var recycler: RecyclerView
-    private lateinit var btnNewReport: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,16 +30,41 @@ class ReportListFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val etTitle = view.findViewById<EditText>(R.id.etTitle)
+        val etDescription = view.findViewById<EditText>(R.id.etDescription)
+        val btnSend = view.findViewById<Button>(R.id.btnSend)
+
+        btnSend.setOnClickListener {
+            val title = etTitle.text.toString().trim()
+            val description = etDescription.text.toString().trim()
+
+            if (title.isNotEmpty() && description.isNotEmpty()) {
+                val newReport = Report(
+                    title = title,
+                    description = description,
+                    status = "Durum: Açık",
+                    time = "Şimdi"
+                )
+
+                ReportRepository.addReport(newReport)
+                requireActivity().onBackPressed()
+            } else {
+                //Toast.makeText(requireContext(), "Lütfen tüm alanları doldurun", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_report_list, container, false)
+        return inflater.inflate(R.layout.fragment_create_report, container, false)
     }
-
-
 
     companion object {
         /**
@@ -50,36 +73,17 @@ class ReportListFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ReportListFragment.
+         * @return A new instance of fragment CreateReportFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            ReportListFragment().apply {
+            CreateReportFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
                 }
             }
     }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-        recycler = view.findViewById(R.id.recyclerViewReports)
-        btnNewReport = view.findViewById(R.id.btnNewReport)
-
-        recycler.layoutManager = LinearLayoutManager(requireContext())
-        recycler.adapter = ReportAdapter(ReportRepository.reports)
-
-        btnNewReport.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, CreateReportFragment())
-                .addToBackStack(null)
-                .commit()
-        }
-    }
-    override fun onResume() {
-        super.onResume()
-        recycler.adapter?.notifyDataSetChanged()
-    }
 }
