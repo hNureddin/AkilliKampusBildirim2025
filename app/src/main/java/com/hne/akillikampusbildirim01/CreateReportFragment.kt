@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 
 class CreateReportFragment : Fragment(R.layout.fragment_create_report) {
 
@@ -17,6 +18,9 @@ class CreateReportFragment : Fragment(R.layout.fragment_create_report) {
 
     private val REQ_LOCATION = 1001
 
+    private lateinit var tvLocation: TextView
+    private lateinit var tvError: TextView
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -24,12 +28,11 @@ class CreateReportFragment : Fragment(R.layout.fragment_create_report) {
         val etDescription = view.findViewById<EditText>(R.id.etDescription)
         val spinnerType = view.findViewById<Spinner>(R.id.spinnerType)
         val btnUseGps = view.findViewById<Button>(R.id.btnUseGps)
-        val tvLocation = view.findViewById<TextView>(R.id.tvLocation)
+        tvLocation = view.findViewById(R.id.tvLocation)
         val btnSend = view.findViewById<Button>(R.id.btnSend)
-        val tvError = view.findViewById<TextView>(R.id.tvError)
+        tvError = view.findViewById(R.id.tvError)
 
-        // Types
-        val types = listOf("Sağlık", "Güvenlik", "Yangın", "Arıza", "Diğer")
+        val types = listOf("Health", "Security", "Fire", "Accident", "Other")
         spinnerType.adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
@@ -38,7 +41,7 @@ class CreateReportFragment : Fragment(R.layout.fragment_create_report) {
 
         btnUseGps.setOnClickListener {
             tvError.text = ""
-            requestGpsAndFetch(tvLocation)
+            requestGpsAndFetch()
         }
 
         btnSend.setOnClickListener {
@@ -49,23 +52,21 @@ class CreateReportFragment : Fragment(R.layout.fragment_create_report) {
             val type = spinnerType.selectedItem.toString()
 
             if (title.isEmpty() || desc.isEmpty()) {
-                tvError.text = "Lütfen başlık ve açıklama girin."
+                tvError.text = "Please Enter Title and Descreption."
                 return@setOnClickListener
             }
 
-            // owner + role
             val prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
             val username = prefs.getString("username", "") ?: ""
 
-            // fallback location if GPS not taken
             val lat = pickedLat ?: 39.92077
             val lng = pickedLng ?: 32.85411
 
             val newReport = Report(
                 title = title,
                 description = desc,
-                status = "Durum: Açık",
-                time = "Şimdi",
+                status = "Status: Open",
+                time = "Now",
                 type = type,
                 ownerUsername = username,
                 lat = lat,
@@ -77,7 +78,7 @@ class CreateReportFragment : Fragment(R.layout.fragment_create_report) {
         }
     }
 
-    private fun requestGpsAndFetch(tvLocation: TextView) {
+    private fun requestGpsAndFetch() {
         val hasFine = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         val hasCoarse = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
@@ -89,33 +90,60 @@ class CreateReportFragment : Fragment(R.layout.fragment_create_report) {
             return
         }
 
-        fetchLocation(tvLocation)
+        fetchLocation()
     }
 
-    private fun fetchLocation(tvLocation: TextView) {
-        val fused = LocationServices.getFusedLocationProviderClient(requireActivity())
+    private fun fetchLocation() {
 
-        // Last known location (سريع، وقد يكون null)
-        fused.lastLocation
+        val hasFine = ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        val hasCoarse = ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (!hasFine && !hasCoarse) {
+            tvLocation.text = "Location permission not granted."
+            return
+        }
+
+        val fused = LocationServices.getFusedLocationProviderClient(requireActivity())
+        tvLocation.text = "Location loading..."
+
+        fused.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
             .addOnSuccessListener { loc ->
                 if (loc != null) {
                     pickedLat = loc.latitude
                     pickedLng = loc.longitude
-                    tvLocation.text = "Konum: ${"%.5f".format(pickedLat)} , ${"%.5f".format(pickedLng)}"
+                    tvLocation.text =
+                        "Location: ${"%.5f".format(pickedLat)} , ${"%.5f".format(pickedLng)}"
                 } else {
-                    tvLocation.text = "Konum alınamadı (GPS kapalı olabilir). Varsayılan konum kullanılacak."
+                    tvLocation.text = "Location is null. Will take default location."
                 }
             }
             .addOnFailureListener {
-                tvLocation.text = "Konum alınamadı. Varsayılan konum kullanılacak."
+                tvLocation.text = "Location failed. Will take default location."
             }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode == REQ_LOCATION) {
-            // بعد الموافقة، سيتم جلب الموقع عند الضغط مرة ثانية (أبسط)
-            // إذا تريد تلقائيًا: يمكننا إعادة النداء مع tvLocation لكن نحتاج مرجع.
+            val granted = grantResults.isNotEmpty() && grantResults.any { it == PackageManager.PERMISSION_GRANTED }
+            if (granted) {
+                fetchLocation()
+            } else {
+                tvError.text = "Location permission denied. Will take default location."
+            }
         }
     }
 }

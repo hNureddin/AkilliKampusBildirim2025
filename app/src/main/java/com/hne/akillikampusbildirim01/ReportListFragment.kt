@@ -55,7 +55,6 @@ class ReportListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         if (::recycler.isInitialized) {
-            // إعادة ربط القائمة حتى تتحدث الفلترة + التغييرات
             bindList()
         }
     }
