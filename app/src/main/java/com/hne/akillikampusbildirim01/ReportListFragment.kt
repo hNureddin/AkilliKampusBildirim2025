@@ -2,10 +2,10 @@ package com.hne.akillikampusbildirim01
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -13,33 +13,26 @@ class ReportListFragment : Fragment() {
 
     private lateinit var recycler: RecyclerView
     private lateinit var btnNewReport: View
-    private var isAdmin: Boolean = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    private var isAdmin = false
+    private var username: String = ""
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_report_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1️⃣ اقرأ هل المستخدم Admin
-        val prefs = requireActivity()
-            .getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         isAdmin = prefs.getBoolean("is_admin", false)
+        username = prefs.getString("username", "") ?: ""
 
-        // 2️⃣ ربط الواجهات
         recycler = view.findViewById(R.id.recyclerViewReports)
         btnNewReport = view.findViewById(R.id.btnNewReport)
 
-        // 3️⃣ إعداد RecyclerView
         recycler.layoutManager = LinearLayoutManager(requireContext())
-        recycler.adapter = ReportAdapter(
-            ReportRepository.reports,
-            isAdmin
-        )
+        bindList()
 
         btnNewReport.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
@@ -49,10 +42,21 @@ class ReportListFragment : Fragment() {
         }
     }
 
+    private fun bindList() {
+        val listToShow = if (isAdmin) {
+            ReportRepository.reports
+        } else {
+            ReportRepository.reports.filter { it.ownerUsername == username }
+        }
+
+        recycler.adapter = ReportAdapter(listToShow, isAdmin)
+    }
+
     override fun onResume() {
         super.onResume()
         if (::recycler.isInitialized) {
-            recycler.adapter?.notifyDataSetChanged()
+            // إعادة ربط القائمة حتى تتحدث الفلترة + التغييرات
+            bindList()
         }
     }
 }

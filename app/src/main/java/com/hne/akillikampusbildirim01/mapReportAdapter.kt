@@ -9,15 +9,14 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MapReportAdapter(
-    private val items: List<Report>
-) : RecyclerView.Adapter<MapReportAdapter.VH>() {
+class MapReportAdapter(private val items: List<Report>) : RecyclerView.Adapter<MapReportAdapter.VH>() {
 
-    class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
-        val tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
-        val tvLocation: TextView = itemView.findViewById(R.id.tvLocation)
-        val btnOpen: Button = itemView.findViewById(R.id.btnOpenInMaps)
+    class VH(v: View) : RecyclerView.ViewHolder(v) {
+        val tvTitle: TextView = v.findViewById(R.id.tvTitle)
+        val tvType: TextView = v.findViewById(R.id.tvType)
+        val tvStatus: TextView = v.findViewById(R.id.tvStatus)
+        val tvCoords: TextView = v.findViewById(R.id.tvCoords)
+        val btnOpen: Button = v.findViewById(R.id.btnOpenInMaps)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -28,19 +27,16 @@ class MapReportAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val r = items[position]
         holder.tvTitle.text = r.title
+        holder.tvType.text = "Type: ${r.type}"
         holder.tvStatus.text = r.status
-        holder.tvLocation.text = "Konum: ${r.locationName} (${r.lat}, ${r.lng})"
+        holder.tvCoords.text = "Location: ${"%.5f".format(r.lat)}, ${"%.5f".format(r.lng)}"
 
         holder.btnOpen.setOnClickListener {
-            val uri = Uri.parse("geo:${r.lat},${r.lng}?q=${r.lat},${r.lng}(${Uri.encode(r.locationName)})")
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            // افتح Google Maps إن وجد، وإلا أي تطبيق خرائط
-            intent.setPackage("com.google.android.apps.maps")
-            if (intent.resolveActivity(holder.itemView.context.packageManager) != null) {
-                holder.itemView.context.startActivity(intent)
-            } else {
-                holder.itemView.context.startActivity(Intent(Intent.ACTION_VIEW, uri))
-            }
+            val uri = Uri.parse("geo:${r.lat},${r.lng}?q=${r.lat},${r.lng}(${Uri.encode(r.title)})")
+            val intent = Intent(Intent.ACTION_VIEW, uri).setPackage("com.google.android.apps.maps")
+            val ctx = holder.itemView.context
+            if (intent.resolveActivity(ctx.packageManager) != null) ctx.startActivity(intent)
+            else ctx.startActivity(Intent(Intent.ACTION_VIEW, uri))
         }
     }
 

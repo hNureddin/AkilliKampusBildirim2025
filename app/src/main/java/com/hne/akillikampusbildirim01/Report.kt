@@ -6,7 +6,9 @@ data class Report(
     var status: String,
     val time: String,
 
-    val locationName: String = "Kampus",
+    val type: String = "Other",
+    val ownerUsername: String = "",
+
     val lat: Double = 39.92077,
     val lng: Double = 32.85411
 )
