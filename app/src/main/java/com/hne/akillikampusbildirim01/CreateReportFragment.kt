@@ -12,36 +12,42 @@ class CreateReportFragment : Fragment(R.layout.fragment_create_report) {
 
         val etTitle = view.findViewById<EditText>(R.id.etTitle)
         val etDescription = view.findViewById<EditText>(R.id.etDescription)
-        val spinnerType = view.findViewById<Spinner>(R.id.spinnerType)
+        val spinnerLocation = view.findViewById<Spinner>(R.id.spinnerLocation)
         val btnSend = view.findViewById<Button>(R.id.btnSend)
         val tvError = view.findViewById<TextView>(R.id.tvError)
+        val locNames = ReportRepository.locations.map { it.name }
 
         val types = listOf("Health", "Security", "Fire", "Fault", "Other")
-        spinnerType.adapter = ArrayAdapter(
+        spinnerLocation.adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             types
+        )
+        spinnerLocation.adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            locNames
         )
 
         btnSend.setOnClickListener {
             val title = etTitle.text.toString().trim()
             val desc = etDescription.text.toString().trim()
-            val type = spinnerType.selectedItem.toString()
+            if (title.isEmpty() || desc.isEmpty()) return@setOnClickListener
 
-            if (title.isEmpty() || desc.isEmpty()) {
-                tvError.text = "Please Enter Title and Descreption"
-                return@setOnClickListener
-            }
+            val selectedIndex = spinnerLocation.selectedItemPosition
+            val loc = ReportRepository.locations[selectedIndex]
 
             val newReport = Report(
-                title = "[$type] $title",
+                title = title,
                 description = desc,
-                status = "Status: Open",
-                time = "Now"
+                status = "Durum: Açık",
+                time = "Şimdi",
+                locationName = loc.name,
+                lat = loc.lat,
+                lng = loc.lng
             )
 
             ReportRepository.addReport(newReport)
-
             requireActivity().onBackPressed()
         }
     }

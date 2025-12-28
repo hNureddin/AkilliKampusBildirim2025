@@ -13,7 +13,7 @@
             android:id="@+id/etTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Başlık"
+            android:hint="Title"
             android:inputType="text"
             android:minHeight="48dp" />
 
@@ -21,14 +21,14 @@
             android:id="@+id/etDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Açıklama"
+            android:hint="Descreption"
             android:inputType="textMultiLine"
             android:minHeight="140dp"
             android:gravity="top"
             android:layout_marginTop="12dp" />
 
         <Spinner
-            android:id="@+id/spinnerType"
+            android:id="@+id/spinnerLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp" />
@@ -37,7 +37,7 @@
             android:id="@+id/btnSend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Gönder"
+            android:text="Send"
             android:layout_marginTop="16dp" />
 
         <TextView
