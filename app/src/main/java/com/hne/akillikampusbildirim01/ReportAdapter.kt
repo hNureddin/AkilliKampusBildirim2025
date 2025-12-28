@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 class ReportAdapter(
     private val items: List<Report>,
     private val isAdmin: Boolean
-) : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
+): RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
     class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.txtVwTitle)
@@ -35,15 +35,14 @@ class ReportAdapter(
         holder.status.text = report.status
         holder.time.text = report.time
 
-        if (isAdmin) {
-            holder.btnChangeStatus.visibility = View.VISIBLE
-            holder.btnChangeStatus.setOnClickListener {
-                report.status = nextStatus(report.status)
-                notifyItemChanged(position)
-            }
-        } else {
-            holder.btnChangeStatus.visibility = View.GONE
-            holder.btnChangeStatus.setOnClickListener(null)
+        holder.itemView.setOnClickListener {
+            val fragment = ReportDetailsFragment.newInstance(position)
+            (holder.itemView.context as MainActivity)
+                .supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainerView, fragment)
+                .addToBackStack(null)
+                .commit()
         }
     }
 
