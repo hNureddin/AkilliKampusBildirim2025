@@ -7,73 +7,99 @@
     android:fitsSystemWindows="true"
     tools:context=".LoginScreen">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="match_parent">
 
-        <!-- University Logo -->
-        <ImageView
-            android:id="@+id/imgLogo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginBottom="12dp"
-            android:contentDescription="University Logo"
-            android:scaleType="fitCenter"
-            android:src="@drawable/university_logo" />
-
-        <!-- App / University Name -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Smart Campus Health and Safety"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="24dp" />
-
-        <!-- Username -->
-        <EditText
-            android:id="@+id/editTextUsername"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/usernameHint"
-            android:inputType="text"
-            android:minHeight="48dp"
-            android:padding="12dp" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-        <!-- Password -->
-        <EditText
-            android:id="@+id/editTextTextPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:minHeight="48dp"
-            android:padding="12dp"
-            android:layout_marginTop="12dp" />
+            <!-- University Logo -->
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginBottom="12dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/university_logo"
+                android:contentDescription="University Logo"/>
 
-        <!-- Login Button -->
-        <Button
-            android:id="@+id/buttonSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/login"
-            android:layout_marginTop="20dp" />
+            <!-- Title -->
+            <TextView
+                android:text="Smart Campus Health and Safety"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
+            <!-- Email -->
+            <EditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="University Email"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp"
+                android:padding="12dp"/>
 
-        <!-- Error / Result -->
-        <TextView
-            android:id="@+id/textViewResult"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textSize="14sp"
-            android:textColor="#D32F2F"
-            android:textAlignment="center" />
+            <!-- Password -->
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:layout_marginTop="12dp"/>
 
+            <!-- Login -->
+            <Button
+                android:id="@+id/buttonLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Login"
+                android:layout_marginTop="20dp"/>
 
-    </LinearLayout>
+            <!-- Create Account -->
+
+            <!-- Info -->
+            <Button
+                android:id="@+id/buttonCreateAccount"
+                android:layout_width="334dp"
+                android:layout_height="34dp"
+                android:layout_marginTop="10dp"
+                android:textSize="12dp"
+                android:text="Create Account" />
+            <Button
+                android:id="@+id/buttonForgotPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Forgot Password?"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:text="Accounts are stored locally (demo purpose)"
+                android:textSize="12sp"
+                android:alpha="0.6"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <!-- Error -->
+            <TextView
+                android:id="@+id/textViewResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="#D32F2F"
+                android:textAlignment="center"/>
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

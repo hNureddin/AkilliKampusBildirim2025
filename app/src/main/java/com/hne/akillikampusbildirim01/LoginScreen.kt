@@ -9,55 +9,65 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class LoginScreen : AppCompatActivity() {
-    private val accounts = listOf(
-        Account(username = "admin", password = "admin1234", isAdmin = true),
-        Account(username = "user", password = "1234", isAdmin = false),
-        Account(username = "nureddin", password = "nureddin1234", isAdmin = false)
-    )
+
+    private val adminEmail = "admin@university.edu"
+    private val adminPassword = "admin123"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_screen)
 
-        val editTextUsername = findViewById<EditText>(R.id.editTextUsername)
-        val editTextPassword = findViewById<EditText>(R.id.editTextTextPassword)
-        val buttonSubmit = findViewById<Button>(R.id.buttonSubmit)
-        val textViewResult = findViewById<TextView>(R.id.textViewResult)
+        val etEmail = findViewById<EditText>(R.id.editTextEmail)
+        val etPassword = findViewById<EditText>(R.id.editTextPassword)
+        val btnLogin = findViewById<Button>(R.id.buttonLogin)
+        val btnCreate = findViewById<Button>(R.id.buttonCreateAccount)
+        val tvResult = findViewById<TextView>(R.id.textViewResult)
+        val btnForgot = findViewById<Button>(R.id.buttonForgotPassword)
 
-        buttonSubmit.setOnClickListener {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
 
-            val username = editTextUsername.text.toString().trim()
-            val password = editTextPassword.text.toString().trim()
+        btnLogin.setOnClickListener {
+            tvResult.setTextColor(Color.RED)
 
-            // ابحث عن حساب مطابق
-            val matchedAccount = accounts.firstOrNull {
-                it.username == username && it.password == password
+            val email = etEmail.text.toString().trim()
+            val pass = etPassword.text.toString().trim()
+
+            if (email.isEmpty() || pass.isEmpty()) {
+                tvResult.text = "Please fill all fields."
+                return@setOnClickListener
             }
 
-            if (matchedAccount != null) {
-                val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+            // Admin
+            if (email == adminEmail && pass == adminPassword) {
                 prefs.edit()
-                    .putBoolean("is_admin", matchedAccount.isAdmin)
-                    .putString("username", matchedAccount.username)
+                    .putString("username", email)
+                    .putBoolean("is_admin", true)
                     .apply()
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+                return@setOnClickListener
+            }
 
+            // User (local)
+            val stored = prefs.getString("user_$email", null)
+            if (stored == pass) {
+                prefs.edit()
+                    .putString("username", email)
+                    .putBoolean("is_admin", false)
+                    .putString("full_name", prefs.getString("user_fullname_$email","") ?: "")
+                    .putString("department", prefs.getString("user_dept_$email","") ?: "")
+                    .apply()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {
-                textViewResult.text = getString(R.string.login_error)
-                textViewResult.setTextColor(Color.RED)
-
-                val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
-                prefs.edit()
-                    .putBoolean("is_admin", false)
-                    .putString("username", "")
-                    .apply()
+                tvResult.text = "Invalid email or password."
             }
+        }
+        btnForgot.setOnClickListener {
+            startActivity(Intent(this, ResetPasswordActivity::class.java))
+        }
+        btnCreate.setOnClickListener {
+            startActivity(Intent(this, CreateAccountActivity::class.java))
         }
     }
 }
-data class Account(
-    val username: String,
-    val password: String,
-    val isAdmin: Boolean
-)
