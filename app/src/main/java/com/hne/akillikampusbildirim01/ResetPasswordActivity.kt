@@ -21,13 +21,13 @@ class ResetPasswordActivity : AppCompatActivity() {
             val email = etEmail.text.toString().trim()
             if (email.isEmpty() || !email.contains("@")) {
                 tvInfo.setTextColor(Color.RED)
-                tvInfo.text = "Geçerli bir e-posta girin."
+                tvInfo.text = "Please Enter a Valid Email Address."
                 return@setOnClickListener
             }
 
             // ✅ Simulation message
             tvInfo.setTextColor(Color.GREEN)
-            tvInfo.text = "Şifre sıfırlama bağlantısı e-postaya gönderildi (simülasyon)."
+            tvInfo.text = "Password reset link sent to $email (simulated)."
         }
     }
 }
