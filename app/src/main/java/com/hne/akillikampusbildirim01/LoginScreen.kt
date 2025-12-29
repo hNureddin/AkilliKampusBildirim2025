@@ -12,6 +12,7 @@ class LoginScreen : AppCompatActivity() {
 
     private val adminEmail = "admin@atauni.ogr.edu.tr"
     private val adminPassword = "admin123"
+    private val adminFullName = "Admin"
 
     // Default regular user
     private val defaultUserEmail = "nureddin@atauni.ogr.edu.tr"
@@ -51,6 +52,7 @@ class LoginScreen : AppCompatActivity() {
                 prefs.edit()
                     .putString("username", email)
                     .putBoolean("is_admin", true)
+                    .putString("full_name", adminFullName)
                     .apply()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()

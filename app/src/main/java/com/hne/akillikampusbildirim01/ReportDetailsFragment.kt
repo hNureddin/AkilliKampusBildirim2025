@@ -66,7 +66,6 @@ class ReportDetailsFragment : Fragment(R.layout.fragment_report_details) {
                 statuses
             )
 
-            // اختيار الحالة الحالية (اختياري لكن جميل)
             val currentIndex = statuses.indexOf(report.status).coerceAtLeast(0)
             spinnerStatus.setSelection(currentIndex)
 
