@@ -13,9 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AkilliKampusBildirim01">
+
         <activity
             android:name=".MainActivity"
             android:exported="false"/>
+        <activity
+            android:name=".CreateAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="false" />
         <activity
             android:name=".LoginScreen"
             android:exported="true"
