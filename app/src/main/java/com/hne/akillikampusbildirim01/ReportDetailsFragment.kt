@@ -12,7 +12,6 @@ class ReportDetailsFragment : Fragment(R.layout.fragment_report_details) {
         super.onViewCreated(view, savedInstanceState)
 
         val index = requireArguments().getInt("report_index")
-
         val report = ReportRepository.reports[index]
 
         val tvTitle = view.findViewById<TextView>(R.id.tvTitle)
@@ -29,13 +28,33 @@ class ReportDetailsFragment : Fragment(R.layout.fragment_report_details) {
         tvDescription.text = report.description
         tvLocation.text = "Location: ${report.lat}, ${report.lng}"
 
-        // Admin logic
         val prefs = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val isAdmin = prefs.getBoolean("is_admin", false)
+        val username = prefs.getString("username", "") ?: ""
+        val isOwner = (report.ownerUsername == username)
 
         val spinnerStatus = view.findViewById<Spinner>(R.id.spinnerStatus)
         val btnUpdate = view.findViewById<Button>(R.id.btnUpdateStatus)
+        val btnEdit = view.findViewById<Button>(R.id.btnEdit)
 
+        // اخفاء افتراضي للجميع
+        spinnerStatus.visibility = View.GONE
+        btnUpdate.visibility = View.GONE
+        btnEdit.visibility = View.GONE
+
+        // ✅ User owner: Edit
+        if (!isAdmin && isOwner) {
+            btnEdit.visibility = View.VISIBLE
+            btnEdit.setOnClickListener {
+                val f = EditReportFragment.newInstance(index)
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView, f)
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
+        // ✅ Admin: Update Status
         if (isAdmin) {
             spinnerStatus.visibility = View.VISIBLE
             btnUpdate.visibility = View.VISIBLE
@@ -47,6 +66,10 @@ class ReportDetailsFragment : Fragment(R.layout.fragment_report_details) {
                 statuses
             )
 
+            // اختيار الحالة الحالية (اختياري لكن جميل)
+            val currentIndex = statuses.indexOf(report.status).coerceAtLeast(0)
+            spinnerStatus.setSelection(currentIndex)
+
             btnUpdate.setOnClickListener {
                 val newStatus = spinnerStatus.selectedItem.toString()
                 report.status = newStatus
@@ -57,11 +80,9 @@ class ReportDetailsFragment : Fragment(R.layout.fragment_report_details) {
 
     companion object {
         fun newInstance(index: Int): ReportDetailsFragment {
-            val f = ReportDetailsFragment()
-            f.arguments = Bundle().apply {
-                putInt("report_index", index)
+            return ReportDetailsFragment().apply {
+                arguments = Bundle().apply { putInt("report_index", index) }
             }
-            return f
         }
     }
 }

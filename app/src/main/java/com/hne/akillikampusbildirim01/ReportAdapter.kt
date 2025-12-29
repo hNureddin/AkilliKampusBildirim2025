@@ -17,7 +17,6 @@ class ReportAdapter(
         val description: TextView = itemView.findViewById(R.id.txtVwDescription)
         val status: TextView = itemView.findViewById(R.id.txtVwStatus)
         val time: TextView = itemView.findViewById(R.id.txtVwTime)
-        val btnChangeStatus: Button = itemView.findViewById(R.id.btnChangeStatus)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
@@ -29,18 +28,16 @@ class ReportAdapter(
 
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
         val report = items[position]
-
         holder.title.text = report.title
         holder.description.text = report.description
         holder.status.text = report.status
         holder.time.text = report.time
 
         holder.itemView.setOnClickListener {
-            val fragment = ReportDetailsFragment.newInstance(position)
-            (holder.itemView.context as MainActivity)
-                .supportFragmentManager
+            val f = ReportDetailsFragment.newInstance(position)
+            (holder.itemView.context as MainActivity).supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragmentContainerView, fragment)
+                .replace(R.id.fragmentContainerView, f)
                 .addToBackStack(null)
                 .commit()
         }

@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         val mapBtn = findViewById<Button>(R.id.mapBtn)
 
         if (savedInstanceState == null) {
-            loadFragment(FirstFragment())
+            loadFragment(HomeFragment())
         }
 
         reportListBtn.setOnClickListener {
