@@ -1,46 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".loginScreen">
+    tools:context=".LoginScreen">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp">
+
+        <!-- University Logo -->
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="University Logo"
+            android:scaleType="fitCenter"
+            android:src="@drawable/university_logo" />
+
+        <!-- App / University Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Smart Campus Health and Safety"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Username -->
         <EditText
             android:id="@+id/editTextUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/usernameHint"
             android:inputType="text"
-            android:minHeight="48dp" />
+            android:minHeight="48dp"
+            android:padding="12dp" />
 
+        <!-- Password -->
         <EditText
             android:id="@+id/editTextTextPassword"
-            android:layout_width="377dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Input Password"
-            android:inputType="textPassword" />
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:layout_marginTop="12dp" />
 
+        <!-- Login Button -->
         <Button
             android:id="@+id/buttonSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/login"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="20dp" />
 
+
+        <!-- Error / Result -->
         <TextView
             android:id="@+id/textViewResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textSize="18sp" />
+            android:textSize="14sp"
+            android:textColor="#D32F2F"
+            android:textAlignment="center" />
+
 
     </LinearLayout>
 
